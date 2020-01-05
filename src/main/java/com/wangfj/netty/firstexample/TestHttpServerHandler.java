@@ -21,6 +21,24 @@ import io.netty.util.CharsetUtil;
  */
 public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("1、handler added");
+        super.handlerAdded(ctx);
+    }
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("2、channel registered");
+        super.channelRegistered(ctx);
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("3、channel active");
+        super.channelActive(ctx);
+    }
+
     /**
      * 读取客户端发送请求，并响应的方法
      * @param ctx
@@ -29,6 +47,7 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+        System.out.println("4、channel read0");
         if(msg instanceof HttpRequest){
             //http响应的内容
             ByteBuf content = Unpooled.copiedBuffer("Hello World", CharsetUtil.UTF_8);
@@ -41,5 +60,17 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
             //写入响应
             ctx.writeAndFlush(response);
         }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("5、channel inactive");
+        super.channelInactive(ctx);
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("6、channel unregistered");
+        super.channelUnregistered(ctx);
     }
 }
