@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试WebSocket</title>
+</head>
+<body>
+<script type="application/javascript">
+    let socket;
+
+    if (window.WebSocket){
+        socket = new WebSocket("ws://localhost:8899/ws")
+        //接收消息事件
+        socket.onmessage = function (event) {
+            let ta = document.getElementById("responseText");
+            ta.value = ta.value + "\n" + event.data;
+        }
+        //连接事件
+        socket.onopen = function (event) {
+            let ta = document.getElementById("responseText");
+            ta.value = "连接开启!";
+        }
+        //关闭事件
+        socket.onclose = function (event) {
+            let ta = document.getElementById("responseText");
+            ta.value = ta.value + "\n" + "连接关闭！";
+        }
+    }else {
+        alert("浏览器不支持WebSocket！")
+    }
+
+    function send(message) {
+        if (!window.WebSocket){return;}
+
+        if (socket.readyState == WebSocket.OPEN){
+            socket.send(message);
+        }else {
+            alert("连接尚未开启！")
+        }
+    }
+</script>
+<form onsubmit="return false;">
+    <textarea name="message" style="width: 400px; height: 150px;"></textarea>
+    <input type="button" value="发送数据" onclick="send(this.form.message.value)">
+    <h3>服务器输出：</h3>
+    <textarea id="responseText" style="width: 400px; height: 150px;"></textarea>
+    <input type="button" value="清空内容" onclick="javascript: document.getElementById('responseText').value = ''">
+</form>
+</body>
+</html>
