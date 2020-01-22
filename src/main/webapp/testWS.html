@@ -9,7 +9,7 @@
     let socket;
 
     if (window.WebSocket){
-        socket = new WebSocket("ws://localhost:8899/ws")
+        socket = new WebSocket("ws://localhost:10301/ws")
         //接收消息事件
         socket.onmessage = function (event) {
             let ta = document.getElementById("responseText");

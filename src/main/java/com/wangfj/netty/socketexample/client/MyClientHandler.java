@@ -2,7 +2,6 @@ package com.wangfj.netty.socketexample.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
 import java.util.UUID;
 
 /**
@@ -11,14 +10,26 @@ import java.util.UUID;
  * @author wangfj
  * @datetime 2020-01-02 22:30
  */
-public class MyClientHandler extends SimpleChannelInboundHandler<String> {
+public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
+
+    public boolean flag = true;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        System.out.println("server remote address：" + ctx.channel().remoteAddress());
-        System.out.println("server msg：" + msg);
-        //返回消息
-        ctx.channel().writeAndFlush("from client: " + UUID.randomUUID());
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("server remote address: " + ctx.channel().remoteAddress());
+        if (msg instanceof byte[]){
+            System.out.println("server msg: " + new String((byte[]) msg, "GBK"));
+        }else {
+            System.out.println("server msg: " + msg);
+            //((PooledUnsafeDirectByteBuf)msg).getByte(0)
+        }
+
+        if (flag){
+            //返回消息
+            ctx.channel().writeAndFlush("from client: " + UUID.randomUUID());
+            flag = false;
+        }
+
     }
 
     /**
@@ -28,7 +39,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.writeAndFlush("来自客户端问候");
+        ctx.channel().writeAndFlush("来自客户端问候~~");
     }
 
     /**
