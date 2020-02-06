@@ -2,7 +2,11 @@ package com.wangfj.netty.socketexample;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -11,14 +15,26 @@ import java.util.UUID;
  * @author wangfj
  * @datetime 2020-01-02 22:18
  */
-public class MyServerHandler extends SimpleChannelInboundHandler<String> {
+public class MyServerHandler extends SimpleChannelInboundHandler<Object> {
+
+    public ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        // to keep track of open sockets
+        group.add(ctx.channel());
+        System.out.println("有客户端连接上了：" + ctx.channel());
+        //发送消息
+        group.writeAndFlush(("欢迎：" + ctx.channel() + "--->" + LocalDateTime.now()).getBytes());
+        super.channelActive(ctx);
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("client remote address：" + ctx.channel().remoteAddress());
         System.out.println("client msg：" + msg);
         //返回消息
-        ctx.channel().writeAndFlush("from server: " + UUID.randomUUID());
+        group.writeAndFlush(("from server: " + UUID.randomUUID()).getBytes());
     }
 
     /**

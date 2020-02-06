@@ -60,7 +60,7 @@ public class MyClient {
             });
 
             //连接服务端
-            ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 10301).sync();
+            ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 10302).sync();
             channelFuture.channel().closeFuture().sync();
         }finally {
             eventLoopGroup.shutdownGracefully();

@@ -26,7 +26,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
 
         if (flag){
             //返回消息
-            ctx.channel().writeAndFlush("from client: " + UUID.randomUUID());
+            ctx.channel().writeAndFlush(("from client: " + UUID.randomUUID()).getBytes());
             flag = false;
         }
 
@@ -39,7 +39,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.channel().writeAndFlush("来自客户端问候~~");
+        ctx.channel().writeAndFlush("来自客户端问候~~".getBytes());
     }
 
     /**
