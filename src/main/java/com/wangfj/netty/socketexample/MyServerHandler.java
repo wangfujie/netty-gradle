@@ -25,7 +25,7 @@ public class MyServerHandler extends SimpleChannelInboundHandler<Object> {
         group.add(ctx.channel());
         System.out.println("有客户端连接上了：" + ctx.channel());
         //发送消息
-        group.writeAndFlush(("欢迎：" + ctx.channel() + "--->" + LocalDateTime.now()).getBytes());
+        group.writeAndFlush(("欢迎：" + ctx.channel() + "--->" + LocalDateTime.now()));
         super.channelActive(ctx);
     }
 

@@ -40,8 +40,8 @@ public class MyServer {
                             //添加解码器
                             pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0,4,0,4));
                             pipeline.addLast(new LengthFieldPrepender(4));
-                            //pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
-                            //pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
+                            pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
+                            pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
 
                             pipeline.addLast(new ByteArrayDecoder());
                             pipeline.addLast(new ByteArrayEncoder());
@@ -51,7 +51,7 @@ public class MyServer {
                         }
                     });
             //定义服务端端口
-            ChannelFuture channelFuture = serverBootstrap.bind("127.0.0.1", 8899).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind("127.0.0.1", 10301).sync();
             channelFuture.channel().closeFuture().sync();
         }finally {
             bossGroup.shutdownGracefully();

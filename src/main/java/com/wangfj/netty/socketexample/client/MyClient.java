@@ -49,18 +49,16 @@ public class MyClient {
                     pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
                     pipeline.addLast("bytesEncoder", new ByteArrayEncoder());
 
-                    //添加字符串解码编码处理
-                    //pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0,4,0,4));
-                    //pipeline.addLast(new LengthFieldPrepender(4));
-                    //pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
-                    //pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
+                    pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
+                    pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
+
                     //自定义处理类
                     pipeline.addLast(new MyClientHandler());
                 }
             });
 
             //连接服务端
-            ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 10302).sync();
+            ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 5511).sync();
             channelFuture.channel().closeFuture().sync();
         }finally {
             eventLoopGroup.shutdownGracefully();

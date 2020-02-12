@@ -12,24 +12,15 @@ import java.util.UUID;
  */
 public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
 
-    public boolean flag = true;
-
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("server remote address: " + ctx.channel().remoteAddress());
         if (msg instanceof byte[]){
-            System.out.println("server msg: " + new String((byte[]) msg, "GBK"));
+            System.out.println("server byte[] msg: " + new String((byte[]) msg, "UTF-8"));
         }else {
-            System.out.println("server msg: " + msg);
+            System.out.println("server other msg: " + msg);
             //((PooledUnsafeDirectByteBuf)msg).getByte(0)
         }
-
-        if (flag){
-            //返回消息
-            ctx.channel().writeAndFlush(("from client: " + UUID.randomUUID()).getBytes());
-            flag = false;
-        }
-
     }
 
     /**
@@ -39,7 +30,8 @@ public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.channel().writeAndFlush("来自客户端问候~~".getBytes());
+        ctx.channel().writeAndFlush("来自客户端问候~~");
+        System.out.println("连接建立时，发送消息到服务端-----------------");
     }
 
     /**
